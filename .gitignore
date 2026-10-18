@@ -1,0 +1,17 @@
+# Ambiente
+.env
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+
+# Material da disciplina
+projeto_sql_handout.pdf
