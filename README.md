@@ -16,41 +16,10 @@ Ao remover um aluno, as viagens e reservas dele também são removidas. Ao remov
 
 ## Modelo relacional
 
-```mermaid
-erDiagram
-    ALUNO ||--o{ VIAGEM : "dirige (motorista)"
-    ALUNO ||--o{ RESERVA : "faz (passageiro)"
-    VIAGEM ||--o{ RESERVA : "recebe"
+Diagrama gerado pelo MySQL Workbench (engenharia reversa do banco `caronas`):
 
-    ALUNO {
-        int id PK
-        varchar nome
-        varchar email UK
-        varchar matricula UK
-        varchar curso
-        bool possui_carro
-        datetime data_cadastro
-    }
+![Modelo relacional](docs/mer.png)
 
-    VIAGEM {
-        int id PK
-        int motorista_id FK
-        varchar origem
-        varchar destino
-        datetime data_hora_partida
-        int vagas_totais
-        decimal preco_por_pessoa
-        enum status
-    }
-
-    RESERVA {
-        int id PK
-        int viagem_id FK
-        int passageiro_id FK
-        enum status
-        datetime criada_em
-    }
-```
 
 ## Endpoints
 
@@ -86,6 +55,8 @@ A documentação interativa fica em `http://localhost:8000/docs` com a API rodan
 │   ├── database.py      # Conexão com o MySQL e sessão do ORM
 │   ├── models/          # Modelos SQLModel: tabelas e schemas de entrada/saída
 │   └── routers/         # Rotas de alunos, viagens e reservas
+├── docs/
+│   └── mer.png          # Diagrama do modelo relacional
 ├── .env.example         # Modelo das variáveis de ambiente
 ├── requirements.txt
 └── README.md
