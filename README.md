@@ -1,5 +1,7 @@
 # Caronas Universitárias API
 
+https://youtu.be/Wz66HFIgBBY
+
 API REST para organizar caronas entre alunos da faculdade. Um aluno pode oferecer viagens como motorista e também reservar vagas como passageiro.
 
 Projeto da disciplina **Megadados** (Insper), desenvolvido com **FastAPI**, **SQLModel** (ORM) e **MySQL**.
@@ -73,6 +75,21 @@ erDiagram
 Todas as listagens aceitam paginação com `offset` e `limit`.
 
 A documentação interativa fica em `http://localhost:8000/docs` com a API rodando.
+
+## Estrutura do projeto
+
+```
+.
+├── app/
+│   ├── main.py          # Criação da aplicação FastAPI e registro das rotas
+│   ├── config.py        # Leitura das variáveis de ambiente (.env)
+│   ├── database.py      # Conexão com o MySQL e sessão do ORM
+│   ├── models/          # Modelos SQLModel: tabelas e schemas de entrada/saída
+│   └── routers/         # Rotas de alunos, viagens e reservas
+├── .env.example         # Modelo das variáveis de ambiente
+├── requirements.txt
+└── README.md
+```
 
 ## Como executar
 

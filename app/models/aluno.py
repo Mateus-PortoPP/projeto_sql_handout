@@ -56,11 +56,35 @@ class AlunoCreate(AlunoBase):
 
 
 class AlunoUpdate(SQLModel):
-    nome: str | None = Field(default=None, max_length=100)
-    email: EmailStr | None = Field(default=None, max_length=120)
-    matricula: str | None = Field(default=None, max_length=20)
-    curso: str | None = Field(default=None, max_length=60)
-    possui_carro: bool | None = None
+    nome: str | None = Field(
+        default=None,
+        max_length=100,
+        description="Novo nome do aluno",
+        schema_extra={"examples": ["Maria Souza Lima"]},
+    )
+    email: EmailStr | None = Field(
+        default=None,
+        max_length=120,
+        description="Novo e-mail do aluno",
+        schema_extra={"examples": ["maria.lima@exemplo.com"]},
+    )
+    matricula: str | None = Field(
+        default=None,
+        max_length=20,
+        description="Nova matrícula",
+        schema_extra={"examples": ["2023009999"]},
+    )
+    curso: str | None = Field(
+        default=None,
+        max_length=60,
+        description="Novo curso",
+        schema_extra={"examples": ["Engenharia de Computação"]},
+    )
+    possui_carro: bool | None = Field(
+        default=None,
+        description="Indica se o aluno possui carro",
+        schema_extra={"examples": [False]},
+    )
 
 
 class AlunoPublic(AlunoBase):

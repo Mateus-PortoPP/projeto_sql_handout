@@ -3,7 +3,7 @@ from decimal import Decimal
 from enum import Enum
 from typing import TYPE_CHECKING
 
-from pydantic import NaiveDatetime
+from pydantic import NaiveDatetime, field_validator
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
@@ -16,6 +16,19 @@ class StatusViagem(str, Enum):
     em_andamento = "em_andamento"
     concluida = "concluida"
     cancelada = "cancelada"
+
+
+def remover_fuso(valor):
+    """Aceita datas com fuso horário convertendo-as para o horário local sem fuso,
+    já que a coluna DATETIME do MySQL não armazena fuso."""
+    if isinstance(valor, str):
+        try:
+            valor = datetime.fromisoformat(valor)
+        except ValueError:
+            return valor
+    if isinstance(valor, datetime) and valor.tzinfo is not None:
+        return valor.astimezone().replace(tzinfo=None)
+    return valor
 
 
 class ViagemBase(SQLModel):
@@ -47,6 +60,8 @@ class ViagemBase(SQLModel):
         schema_extra={"examples": ["8.50"]},
     )
 
+    _validar_data = field_validator("data_hora_partida", mode="before")(remover_fuso)
+
 
 class Viagem(ViagemBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -67,14 +82,45 @@ class ViagemCreate(ViagemBase):
 
 
 class ViagemUpdate(SQLModel):
-    origem: str | None = Field(default=None, max_length=150)
-    destino: str | None = Field(default=None, max_length=150)
-    data_hora_partida: NaiveDatetime | None = None
-    vagas_totais: int | None = Field(default=None, ge=1, le=6)
-    preco_por_pessoa: Decimal | None = Field(
-        default=None, ge=0, max_digits=6, decimal_places=2
+    origem: str | None = Field(
+        default=None,
+        max_length=150,
+        description="Novo ponto de partida",
+        schema_extra={"examples": ["Estação Pinheiros"]},
     )
-    status: StatusViagem | None = None
+    destino: str | None = Field(
+        default=None,
+        max_length=150,
+        description="Novo ponto de chegada",
+        schema_extra={"examples": ["Campus Central - Av. Exemplo, 1000"]},
+    )
+    data_hora_partida: NaiveDatetime | None = Field(
+        default=None,
+        description="Nova data e hora de partida",
+        schema_extra={"examples": ["2026-10-20T08:00:00"]},
+    )
+    vagas_totais: int | None = Field(
+        default=None,
+        ge=1,
+        le=6,
+        description="Nova quantidade de vagas",
+        schema_extra={"examples": [4]},
+    )
+    preco_por_pessoa: Decimal | None = Field(
+        default=None,
+        ge=0,
+        max_digits=6,
+        decimal_places=2,
+        description="Novo valor por passageiro (R$)",
+        schema_extra={"examples": ["10.00"]},
+    )
+    status: StatusViagem | None = Field(
+        default=None,
+        description="Novo status da viagem",
+        schema_extra={"examples": ["em_andamento"]},
+    )
+
+    _validar_data = field_validator("data_hora_partida", mode="before")(remover_fuso)
 
 
 class ViagemPublic(ViagemBase):
