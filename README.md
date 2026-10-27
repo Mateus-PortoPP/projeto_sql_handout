@@ -114,3 +114,6 @@ A documentação interativa fica em `http://localhost:8000/docs` com a API rodan
    ```bash
    fastapi dev app/main.py
    ```
+
+
+Eu usei IA para auxiliar na escrita do README e para selecionar qual tema do projeto, e em qual complexidade de banco eu deveria fazer. Também utilizei para correção de código, pois ao fazer alguns testes percebi que o PATCH de viagens não estava funcionando corretamente.
